@@ -217,13 +217,7 @@ Object.assign(india_compliance, {
         `).appendTo(field.$wrapper.find(".gstin-last-updated"));
 
         refresh_btn.on("click", async function () {
-            const force_update = true;
-            await india_compliance.set_gstin_status(
-                field,
-                transaction_date,
-                null,
-                force_update
-            );
+            await india_compliance.set_gstin_status(field, transaction_date, 0, true);
         });
     },
 
@@ -267,9 +261,9 @@ Object.assign(india_compliance, {
         return pan;
     },
 
-    validate_gstin(gstin) {
+    validate_gstin(gstin, show_msg = true) {
         if (!gstin || gstin.length !== 15) {
-            frappe.msgprint(__("GSTIN must be 15 characters long"));
+            if (show_msg) frappe.msgprint(__("GSTIN must be 15 characters long"));
             return;
         }
 
@@ -278,7 +272,7 @@ Object.assign(india_compliance, {
         if (GSTIN_REGEX.test(gstin) && is_gstin_check_digit_valid(gstin)) {
             return gstin;
         } else {
-            frappe.msgprint(__("Invalid GSTIN"));
+            if (show_msg) frappe.msgprint(__("Invalid GSTIN"));
         }
     },
 
